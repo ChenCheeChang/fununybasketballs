@@ -100,16 +100,37 @@
     }
     #hud.visible { display: flex; }
 
+    #pause-btn {
+      pointer-events: auto;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: 999px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.15s ease;
+    }
+    #pause-btn:active { transform: scale(0.92); }
+    #pause-btn svg { width: 16px; height: 16px; }
+
     .hud-pill {
       background: var(--glass-bg);
       border: 1px solid var(--glass-border);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-radius: 999px;
-      padding: 8px 12px;
+      padding: 8px 11px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
       white-space: nowrap;
     }
@@ -146,6 +167,31 @@
       display: inline-block;
     }
 
+    /* Streak Badge */
+    #streak-badge {
+      position: absolute;
+      top: calc(var(--safe-top) + 64px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      z-index: 24;
+      pointer-events: none;
+      opacity: 0;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.92), rgba(220, 38, 38, 0.92));
+      border: 1px solid rgba(255, 236, 179, 0.78);
+      color: #fffbeb;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+      transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #streak-badge.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
     /* Callout Toast (Swish / Bank / Stage Gimmick / Miss X) */
     #callout {
       position: absolute;
@@ -168,7 +214,7 @@
       display: inline-block;
       padding: 8px 20px;
       border-radius: 999px;
-      background: rgba(20, 12, 24, 0.82);
+      background: rgba(20, 12, 24, 0.84);
       border: 1px solid rgba(255, 207, 110, 0.55);
       color: #ffe39b;
       font-size: 17px;
@@ -185,6 +231,32 @@
       color: #ff7b7b;
       border-color: rgba(248, 113, 113, 0.72);
       text-shadow: 0 2px 10px rgba(239, 68, 68, 0.55);
+    }
+
+    /* Sleek Aim Power Bar */
+    #power-meter {
+      position: absolute;
+      bottom: calc(var(--safe-bottom) + 34px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 128px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(15, 10, 22, 0.75);
+      border: 1px solid rgba(255, 207, 110, 0.35);
+      overflow: hidden;
+      z-index: 21;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.14s ease;
+    }
+    #power-meter.visible { opacity: 1; }
+    #power-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #34d399 0%, #fbbf24 55%, #f97316 85%, #ef4444 100%);
+      transition: width 0.04s linear;
     }
 
     /* Side-Step Move Controls */
@@ -206,7 +278,7 @@
       height: 54px;
       border-radius: 999px;
       border: 1px solid var(--glass-border);
-      background: rgba(18, 12, 22, 0.56);
+      background: rgba(18, 12, 22, 0.58);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       color: var(--gold);
@@ -219,11 +291,11 @@
     }
     .move-btn:active, .move-btn.pressed {
       transform: scale(0.92);
-      background: rgba(232, 72, 48, 0.42);
+      background: rgba(232, 72, 48, 0.44);
     }
     .move-btn svg { width: 24px; height: 24px; }
 
-    /* Subtle Swipe Cue */
+    /* Subtle First-Throw Cue */
     #swipe-cue {
       position: absolute;
       bottom: calc(var(--safe-bottom) + 18%);
@@ -252,7 +324,7 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       color: #ffebc2;
-      background: rgba(15, 10, 20, 0.6);
+      background: rgba(15, 10, 20, 0.62);
       padding: 4px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255, 207, 110, 0.25);
@@ -428,9 +500,7 @@
       line-height: 1.72;
       color: #f7ead4;
     }
-    .rules-list p {
-      margin: 0 0 6px;
-    }
+    .rules-list p { margin: 0 0 6px; }
     .rules-list p:last-child { margin-bottom: 0; }
     .rules-list strong { color: var(--gold); }
 
@@ -455,6 +525,37 @@
       font-size: 11px;
       color: rgba(255, 235, 205, 0.68);
       margin-top: 2px;
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      margin: 12px 0 16px;
+    }
+    .lvl-chip {
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 207, 110, 0.24);
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffe8b8;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .lvl-chip:active { transform: scale(0.92); }
+    .lvl-chip.current {
+      background: linear-gradient(135deg, #f25a38, #d4321e);
+      border-color: #ffd573;
+      color: #fff;
+    }
+    .lvl-chip.locked {
+      opacity: 0.32;
+      cursor: not-allowed;
     }
 
     .modal-actions {
@@ -485,6 +586,12 @@
 
     <!-- Minimalist In-Game HUD -->
     <div id="hud">
+      <button id="pause-btn" aria-label="暫停與選關">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <rect x="6" y="4" width="4" height="16" rx="1.5"></rect>
+          <rect x="14" y="4" width="4" height="16" rx="1.5"></rect>
+        </svg>
+      </button>
       <div class="hud-pill">
         <span class="hud-level" id="hud-level">第 1/30 關</span>
       </div>
@@ -496,6 +603,10 @@
         <span class="hud-balls" id="hud-balls">× 5</span>
       </div>
     </div>
+
+    <!-- Streak & Aim Power Meter -->
+    <div id="streak-badge">連續命中 × 2</div>
+    <div id="power-meter"><div id="power-fill"></div></div>
 
     <!-- Shot / Gimmick Callout -->
     <div id="callout"><span id="callout-text">空心進球！</span></div>
@@ -597,6 +708,21 @@
         </div>
       </div>
     </div>
+
+    <!-- In-Game Pause & Stage Select Modal -->
+    <div class="modal-backdrop" id="modal-pause">
+      <div class="modal-card">
+        <div class="modal-badge">遊戲暫停</div>
+        <h2 class="modal-title" id="pause-title">第 1 關</h2>
+        <p class="modal-desc" style="margin-bottom:8px;">點選已解鎖關卡可直接切換挑戰</p>
+        <div class="level-grid" id="level-grid"></div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="btn-resume">繼續遊戲</button>
+          <button class="btn btn-secondary" id="btn-pause-restart">重新開始本關</button>
+          <button class="btn btn-secondary" id="btn-pause-home">回到首頁</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -604,9 +730,47 @@
     'use strict';
 
     const TOTAL_LEVELS = 30;
+    const STORAGE_KEY = 'night_market_hoops_max_lvl_v2';
+
+    // Safe rounded-rectangle helper for all iOS Safari versions
+    function drawRoundedRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function loadUnlockedLevel() {
+      try {
+        const v = parseInt(localStorage.getItem(STORAGE_KEY) || '1', 10);
+        return Number.isFinite(v) ? Math.max(1, Math.min(TOTAL_LEVELS, v)) : 1;
+      } catch (_) {
+        return 1;
+      }
+    }
+
+    function saveUnlockedLevel(lvl) {
+      try {
+        const prev = loadUnlockedLevel();
+        if (lvl > prev) localStorage.setItem(STORAGE_KEY, String(Math.min(TOTAL_LEVELS, lvl)));
+      } catch (_) {}
+    }
+
+    function triggerHaptic(ms = 12) {
+      try {
+        if (navigator.vibrate) navigator.vibrate(ms);
+      } catch (_) {}
+    }
 
     // =========================================================================
-    // 1. REALISTIC AUDIO ENGINE (60.8s Fast Cheerful Alice BGM + Physical SFX)
+    // 1. AUDIO ENGINE (60.8s Fast Cheerful Alice-in-Wonderland BGM + Crisp SFX)
     // =========================================================================
     class AudioEngine {
       constructor() {
@@ -622,43 +786,39 @@
       }
 
       init() {
-        try {
-          if (!this.ctx) {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            if (!AudioCtx) return;
-            this.ctx = new AudioCtx();
-            this.masterGain = this.ctx.createGain();
-            this.masterGain.gain.value = this.muted ? 0 : 0.85;
-            this.masterGain.connect(this.ctx.destination);
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          this.ctx = new AudioCtx();
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.value = this.muted ? 0 : 0.85;
+          this.masterGain.connect(this.ctx.destination);
 
-            this.bgmGain = this.ctx.createGain();
-            this.bgmGain.gain.value = 0.28;
-            this.bgmGain.connect(this.masterGain);
+          this.bgmGain = this.ctx.createGain();
+          this.bgmGain.gain.value = 0.28;
+          this.bgmGain.connect(this.masterGain);
 
-            this.sfxGain = this.ctx.createGain();
-            this.sfxGain.gain.value = 0.92;
-            this.sfxGain.connect(this.masterGain);
+          this.sfxGain = this.ctx.createGain();
+          this.sfxGain.gain.value = 0.92;
+          this.sfxGain.connect(this.masterGain);
 
-            const len = this.ctx.sampleRate * 2;
-            this.noiseBuffer = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
-            const data = this.noiseBuffer.getChannelData(0);
-            let b0 = 0, b1 = 0, b2 = 0;
-            for (let i = 0; i < len; i++) {
-              const w = Math.random() * 2 - 1;
-              b0 = 0.997 * b0 + w * 0.029;
-              b1 = 0.985 * b1 + w * 0.032;
-              b2 = 0.950 * b2 + w * 0.048;
-              data[i] = (b0 + b1 + b2 + w * 0.18) * 0.5;
-            }
+          const len = this.ctx.sampleRate * 2;
+          this.noiseBuffer = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+          const data = this.noiseBuffer.getChannelData(0);
+          let b0 = 0, b1 = 0, b2 = 0;
+          for (let i = 0; i < len; i++) {
+            const w = Math.random() * 2 - 1;
+            b0 = 0.997 * b0 + w * 0.029;
+            b1 = 0.985 * b1 + w * 0.032;
+            b2 = 0.950 * b2 + w * 0.048;
+            data[i] = (b0 + b1 + b2 + w * 0.18) * 0.5;
           }
-          if (this.ctx && this.ctx.state === 'suspended') {
-            this.ctx.resume().catch(() => {});
-          }
-          if (!this.bgmRunning) {
-            this.startBGM();
-          }
-        } catch (err) {
-          console.warn('Audio init skipped:', err);
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+        if (!this.bgmRunning) {
+          this.startBGM();
         }
       }
 
@@ -669,32 +829,26 @@
         }
       }
 
-      // 60.8-second Fast Cheerful Alice-in-Wonderland Whimsical March (320 steps @ 190ms)
       startBGM() {
         if (!this.ctx || this.bgmRunning) return;
         this.bgmRunning = true;
 
         const chords = [
-          // Section A: Mad Tea Party March
           [60, 64, 67], [60, 64, 67], [55, 59, 62, 65], [55, 59, 62, 65],
           [57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62, 65],
           [60, 64, 67], [55, 59, 62, 67],
-          // Section B: White Rabbit Hop
           [55, 59, 62], [55, 59, 62], [50, 54, 57, 60], [50, 54, 57, 60],
           [52, 55, 59], [48, 52, 55], [55, 59, 62], [50, 54, 57, 60],
           [55, 59, 62], [55, 59, 62, 65],
-          // Section C: Cheshire Cat Playful Run
           [57, 60, 64], [52, 56, 59, 62], [57, 60, 64], [53, 57, 60],
           [50, 53, 57], [55, 59, 62, 65], [60, 64, 67], [52, 56, 59, 62],
           [57, 60, 64], [55, 59, 62, 65],
-          // Section D: Grand Wonderland Carnival Finale
           [53, 57, 60], [55, 59, 62], [52, 55, 59], [57, 60, 64],
           [50, 53, 57], [55, 59, 62, 65], [60, 64, 67], [53, 57, 60],
           [55, 59, 62, 65], [60, 64, 67, 72]
         ];
 
         const melodies = [
-          // Section A
           [72, 76, 79, 76, 81, 79, 76, 72],
           [74, 72, 76, 79, 84, null, 79, null],
           [79, 77, 74, 71, 74, 77, 79, 83],
@@ -705,7 +859,6 @@
           [74, 77, 79, 83, 81, 79, 77, 74],
           [72, 79, 76, 84, 79, 88, 84, null],
           [79, 81, 83, 84, 83, 81, 79, null],
-          // Section B
           [79, 83, 86, 83, 79, 83, 86, 91],
           [88, 86, 83, 79, 83, null, 79, null],
           [81, 86, 84, 81, 78, 81, 84, 86],
@@ -716,7 +869,6 @@
           [78, 81, 84, 86, 84, 81, 78, 74],
           [79, 83, 86, 91, 86, 83, 79, null],
           [79, 77, 74, 77, 79, 83, 79, null],
-          // Section C
           [81, 80, 81, 84, 83, 81, 79, 76],
           [76, 79, 80, 83, 80, 76, 71, null],
           [81, 84, 88, 84, 81, 76, 81, 83],
@@ -727,7 +879,6 @@
           [76, 80, 83, 88, 83, 80, 76, null],
           [81, 83, 84, 88, 84, 81, 76, null],
           [79, 83, 86, 83, 79, 77, 74, 71],
-          // Section D
           [77, 81, 84, 86, 84, 81, 77, 81],
           [79, 83, 86, 88, 86, 83, 79, 83],
           [76, 79, 83, 86, 83, 79, 76, 79],
@@ -871,6 +1022,20 @@
         src.start(time, Math.random() * 1.2, 0.08);
       }
 
+      playUiTap() {
+        if (!this.ctx || this.muted) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(720, now);
+        osc.frequency.exponentialRampToValueAtTime(480, now + 0.035);
+        g.gain.setValueAtTime(0.08, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+        osc.connect(g); g.connect(this.sfxGain);
+        osc.start(now); osc.stop(now + 0.05);
+      }
+
       playMissX() {
         if (!this.ctx || this.muted) return;
         const now = this.ctx.currentTime;
@@ -924,9 +1089,7 @@
           gain.gain.setValueAtTime(fm.vol * 0.95, now + 3.2);
           gain.gain.exponentialRampToValueAtTime(0.001, now + totalDur);
 
-          src.connect(bp);
-          bp.connect(gain);
-          gain.connect(this.sfxGain);
+          src.connect(bp); bp.connect(gain); gain.connect(this.sfxGain);
           src.start(now, Math.random() * 1.0);
           src.stop(now + totalDur + 0.05);
         });
@@ -1027,7 +1190,7 @@
         });
       }
 
-      playSwish(isNewHoop = true) {
+      playSwish(isNewHoop = true, streak = 1) {
         if (!this.ctx || this.muted) return;
         const now = this.ctx.currentTime;
         if (this.noiseBuffer) {
@@ -1046,12 +1209,13 @@
           src.start(now, Math.random(), 0.28);
         }
         if (isNewHoop) {
+          const pitchMult = Math.min(1.42, 1 + Math.max(0, streak - 1) * 0.075);
           const notes = [523.25, 659.25, 783.99, 1046.5];
           notes.forEach((f, i) => {
             const osc = this.ctx.createOscillator();
             const g = this.ctx.createGain();
             osc.type = 'sine';
-            osc.frequency.setValueAtTime(f, now + 0.04 + i * 0.045);
+            osc.frequency.setValueAtTime(f * pitchMult, now + 0.04 + i * 0.045);
             g.gain.setValueAtTime(0.001, now + 0.04 + i * 0.045);
             g.gain.linearRampToValueAtTime(0.14, now + 0.055 + i * 0.045);
             g.gain.exponentialRampToValueAtTime(0.0008, now + 0.55 + i * 0.045);
@@ -1171,10 +1335,10 @@
         const count = 6 + (level - 4);
         const balls = count === 16 ? 19 : count + 2;
         const rows = count <= 8 ? 2 : (count <= 12 ? 3 : 4);
-        const scale = count <= 8 ? 0.84 : (count <= 12 ? 0.76 : 0.68);
-        const yTop = rows === 2 ? 2.16 : (rows === 3 ? 2.32 : 2.44);
-        const yBot = rows === 2 ? 1.52 : (rows === 3 ? 1.42 : 1.32);
-        const maxSpanX = count >= 13 ? 2.14 : (count >= 10 ? 2.04 : 1.88);
+        const scale = count <= 8 ? 0.84 : (count <= 12 ? 0.76 : 0.66);
+        const yTop = rows === 2 ? 2.16 : (rows === 3 ? 2.34 : 2.54);
+        const yBot = rows === 2 ? 1.52 : (rows === 3 ? 1.40 : 1.24);
+        const maxSpanX = count >= 13 ? 2.16 : (count >= 10 ? 2.04 : 1.88);
         const hoops = makeGridHoops(count, rows, yTop, yBot, maxSpanX);
         return {
           level, balls, scale,
@@ -1183,7 +1347,6 @@
         };
       }
 
-      // Dynamic Gimmick Levels: 15-30
       if (level === 15) {
         const hoops = makeGridHoops(6, 2, 2.08, 1.58, 1.56).map((h, i) => ({
           ...h, motion: { type: 'vertical', amp: 0.22, speed: 1.55, phase: i * 1.05 }
@@ -1196,6 +1359,7 @@
         }));
         return { level, balls: 11, scale: 0.80, gimmickLabel: '機關：波浪上下加速', hoops };
       }
+
       if (level === 17) {
         const hoops = makeGridHoops(6, 2, 2.12, 1.54, 1.32).map((h) => ({
           ...h, motion: { type: 'horizontal', amp: 0.34, speed: 1.45, phase: h.row * Math.PI }
@@ -1208,6 +1372,7 @@
         }));
         return { level, balls: 12, scale: 0.76, gimmickLabel: '機關：交錯左右滑動', hoops };
       }
+
       if (level === 19) {
         const hoops = [];
         [-0.64, 0.64].forEach((cx, gIdx) => {
@@ -1238,6 +1403,7 @@
         });
         return { level, balls: 12, scale: 0.74, gimmickLabel: '機關：雙環旋轉交換', hoops };
       }
+
       if (level === 21) {
         const hoops = makeGridHoops(6, 2, 2.12, 1.54, 1.60).map((h, i) => ({
           ...h, flip: { period: 5.2, backRatio: 0.36, phase: i * 1.1 }
@@ -1245,11 +1411,12 @@
         return { level, balls: 10, scale: 0.84, gimmickLabel: '機關：翻牌轉向背面', hoops };
       }
       if (level === 22) {
-        const hoops = makeGridHoops(9, 3, 2.28, 1.44, 1.64).map((h) => ({
+        const hoops = makeGridHoops(9, 3, 2.28, 1.44, 1.64).map((h, i) => ({
           ...h, flip: { period: 4.6, backRatio: 0.40, phase: (h.row + h.col) * 0.95 }
         }));
         return { level, balls: 13, scale: 0.76, gimmickLabel: '機關：交錯翻牌迷陣', hoops };
       }
+
       if (level === 23) {
         const hoops = makeGridHoops(6, 2, 2.12, 1.54, 1.60).map((h, i) => ({
           ...h, vanish: { period: 5.0, hideRatio: 0.34, phase: i * 1.35 }
@@ -1262,6 +1429,7 @@
         }));
         return { level, balls: 13, scale: 0.76, gimmickLabel: '機關：閃現消失陣', hoops };
       }
+
       if (level === 25) {
         const hoops = makeGridHoops(6, 2, 2.12, 1.54, 1.64).map((h, i) => ({
           ...h, resize: { min: 0.66, max: 1.18, speed: 1.65, phase: i * 1.1 }
@@ -1274,6 +1442,7 @@
         }));
         return { level, balls: 13, scale: 0.76, gimmickLabel: '機關：脈動縮放陣', hoops };
       }
+
       if (level === 27) {
         const hoops = makeGridHoops(8, 2, 2.10, 1.56, 1.88).map((h, i) => ({
           ...h,
@@ -1341,21 +1510,10 @@
     // =========================================================================
     // 3. PROCEDURAL ART TEXTURES
     // =========================================================================
-    function drawRoundedRect(ctx, x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + w, y, x + w, y + h, r);
-      ctx.arcTo(x + w, y + h, x, y + h, r);
-      ctx.arcTo(x, y + h, x, y, r);
-      ctx.arcTo(x, y, x + w, y, r);
-      ctx.closePath();
-    }
-
     function createBasketballTexture() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 256;
       const ctx = c.getContext('2d');
-
       const grad = ctx.createLinearGradient(0, 0, 0, 256);
       grad.addColorStop(0, '#e86820');
       grad.addColorStop(0.5, '#d45114');
@@ -1363,7 +1521,7 @@
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 512, 256);
 
-      for (let i = 0; i < 4800; i++) {
+      for (let i = 0; i < 4200; i++) {
         const x = Math.random() * 512;
         const y = Math.random() * 256;
         const r = 0.8 + Math.random() * 1.1;
@@ -1590,7 +1748,6 @@
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
-
       const grad = ctx.createLinearGradient(0, 0, 0, 512);
       grad.addColorStop(0, '#4c6178');
       grad.addColorStop(0.6, '#3e5166');
@@ -1631,6 +1788,43 @@
       }
       const tex = new THREE.CanvasTexture(c);
       tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      return tex;
+    }
+
+    function createGlowSpriteTexture(innerCol = 'rgba(255,215,130,0.9)', outerCol = 'rgba(255,120,40,0)') {
+      const c = document.createElement('canvas');
+      c.width = 128; c.height = 128;
+      const ctx = c.getContext('2d');
+      const g = ctx.createRadialGradient(64, 64, 4, 64, 64, 62);
+      g.addColorStop(0, innerCol);
+      g.addColorStop(0.42, 'rgba(255,170,70,0.34)');
+      g.addColorStop(1, outerCol);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 128, 128);
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      return tex;
+    }
+
+    function createPavementTexture() {
+      const c = document.createElement('canvas');
+      c.width = 512; c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#18131f';
+      ctx.fillRect(0, 0, 512, 512);
+      ctx.strokeStyle = 'rgba(255, 220, 180, 0.05)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i <= 512; i += 64) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
+      }
+      for (let i = 0; i < 1800; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255,220,180,0.03)' : 'rgba(0,0,0,0.14)';
+        ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(6, 6);
       return tex;
     }
 
@@ -1687,6 +1881,8 @@
     const texAwning = createAwningTexture();
     const texMarquee = createMarqueeSignTexture();
     const texWood = createWoodTexture();
+    const texGlow = createGlowSpriteTexture();
+    const texPavement = createPavementTexture();
 
     const boothGroup = new THREE.Group();
     scene.add(boothGroup);
@@ -1694,31 +1890,31 @@
     const woodMat = new THREE.MeshStandardMaterial({ map: texWood, roughness: 0.78, metalness: 0.08 });
     const darkMetalMat = new THREE.MeshStandardMaterial({ color: 0x242028, roughness: 0.45, metalness: 0.65 });
 
-    // Coplanar mounting wall right behind all backboards (z = -3.26)
+    // Coplanar mounting wall right behind all backboards (z = -3.40 so flipping hoops clear cleanly)
     const backWall = new THREE.Mesh(
-      new THREE.PlaneGeometry(4.6, 3.5),
+      new THREE.PlaneGeometry(4.6, 3.6),
       new THREE.MeshStandardMaterial({ color: 0x1e1428, roughness: 0.90 })
     );
-    backWall.position.set(0, 1.95, -3.26);
+    backWall.position.set(0, 1.95, -3.40);
     backWall.receiveShadow = true;
     boothGroup.add(backWall);
 
     const railMat = new THREE.MeshStandardMaterial({ color: 0x2d2636, roughness: 0.48, metalness: 0.55 });
     [-1.15, -0.38, 0.38, 1.15].forEach((rx) => {
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(0.036, 2.4, 0.025), railMat);
-      rail.position.set(rx, 1.92, -3.245);
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(0.036, 2.48, 0.025), railMat);
+      rail.position.set(rx, 1.92, -3.38);
       boothGroup.add(rail);
     });
     [1.48, 1.88, 2.28].forEach((ry) => {
       const bar = new THREE.Mesh(new THREE.BoxGeometry(3.7, 0.024, 0.022), railMat);
-      bar.position.set(0, ry, -3.248);
+      bar.position.set(0, ry, -3.383);
       boothGroup.add(bar);
     });
 
     const postGeo = new THREE.BoxGeometry(0.14, 3.6, 0.14);
     [-1.96, 1.96].forEach((x) => {
       const post = new THREE.Mesh(postGeo, woodMat);
-      post.position.set(x, 1.8, -3.28);
+      post.position.set(x, 1.8, -3.36);
       boothGroup.add(post);
       const frontPost = new THREE.Mesh(postGeo, woodMat);
       frontPost.position.set(x, 1.8, -1.55);
@@ -1750,7 +1946,7 @@
         emissive: new THREE.Color(0x5a1808), emissiveIntensity: 0.45
       })
     );
-    marquee.position.set(0, 3.20, -3.18);
+    marquee.position.set(0, 3.20, -3.22);
     boothGroup.add(marquee);
 
     const ramp = new THREE.Mesh(
@@ -1771,14 +1967,38 @@
 
     const floor = new THREE.Mesh(
       new THREE.PlaneGeometry(14, 14),
-      new THREE.MeshStandardMaterial({ color: 0x17121c, roughness: 0.85, metalness: 0.1 })
+      new THREE.MeshStandardMaterial({ map: texPavement, roughness: 0.72, metalness: 0.16 })
     );
     floor.rotation.x = -Math.PI / 2;
     floor.position.set(0, 0, -2.5);
     boothGroup.add(floor);
 
+    // Ambient floating warm night-market light motes
+    const moteCount = 36;
+    const motePos = new Float32Array(moteCount * 3);
+    const motePhases = new Float32Array(moteCount);
+    for (let i = 0; i < moteCount; i++) {
+      motePos[i * 3] = (Math.random() - 0.5) * 4.2;
+      motePos[i * 3 + 1] = 0.6 + Math.random() * 2.6;
+      motePos[i * 3 + 2] = -3.1 + Math.random() * 2.8;
+      motePhases[i] = Math.random() * Math.PI * 2;
+    }
+    const moteGeo = new THREE.BufferGeometry();
+    moteGeo.setAttribute('position', new THREE.BufferAttribute(motePos, 3));
+    const moteMat = new THREE.PointsMaterial({
+      color: 0xffe099, size: 0.045, map: texGlow,
+      transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending
+    });
+    const ambientMotes = new THREE.Points(moteGeo, moteMat);
+    scene.add(ambientMotes);
+
+    // String lights with soft halo glow
     const bulbs = [];
     const bulbGeo = new THREE.SphereGeometry(0.036, 12, 12);
+    const bulbGlowMat = new THREE.SpriteMaterial({
+      map: texGlow, color: 0xffd278, transparent: true, opacity: 0.55,
+      depthWrite: false, blending: THREE.AdditiveBlending
+    });
     for (let i = 0; i < 15; i++) {
       const t = i / 14;
       const x = -1.86 + t * 3.72;
@@ -1786,7 +2006,11 @@
       const b = new THREE.Mesh(bulbGeo, new THREE.MeshBasicMaterial({ color: 0xffe296 }));
       b.position.set(x, 2.92 - sag, -2.95);
       boothGroup.add(b);
-      bulbs.push({ mesh: b, phase: i * 0.55 });
+      const glow = new THREE.Sprite(bulbGlowMat);
+      glow.position.copy(b.position);
+      glow.scale.set(0.24, 0.24, 1);
+      boothGroup.add(glow);
+      bulbs.push({ mesh: b, glow, phase: i * 0.55 });
     }
 
     const lanterns = [];
@@ -1807,6 +2031,12 @@
       const botCap = new THREE.Mesh(capGeo, goldMat); botCap.position.y = -0.17; grp.add(botCap);
       const tassel = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.022, 0.14, 8), goldMat);
       tassel.position.y = -0.25; grp.add(tassel);
+      const lGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: texGlow, color: 0xff6b35, transparent: true, opacity: 0.45,
+        depthWrite: false, blending: THREE.AdditiveBlending
+      }));
+      lGlow.scale.set(0.75, 0.85, 1);
+      grp.add(lGlow);
       boothGroup.add(grp);
       lanterns.push({ group: grp, phase: x });
     }
@@ -1832,7 +2062,7 @@
     scene.add(playerRimLight);
 
     // =========================================================================
-    // 4B. CASUAL PLAYER AVATAR WITH AUTHENTIC SUPER SAIYAN FLAME-SPIKE HAIR
+    // 4B. NATURAL CASUAL PLAYER WITH SHARP 4-EDGED SUPER SAIYAN GOLDEN HAIR
     // =========================================================================
     const texTee = createCasualTeeTexture();
     const player = {
@@ -1863,6 +2093,49 @@
     function createLathe(pts, segs = 30) {
       const vecs = pts.map(([r, y]) => new THREE.Vector2(Math.max(0.001, r), y));
       const geo = new THREE.LatheGeometry(vecs, segs);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    // Crisp 4-edged faceted Super Saiyan diamond spike with root-to-tip golden gradient vertex colors
+    function createSSJSpike(length, baseW, baseD, tipBendX = 0, tipBendZ = 0) {
+      const midY = length * 0.36;
+      const midW = baseW * 1.12;
+      const midD = baseD * 1.08;
+      const midX = tipBendX * 0.25;
+      const midZ = tipBendZ * 0.25;
+
+      // 4-point diamond ring at root (y=0), wider ridge at midY, razor point at tip
+      const r0 = [0, 0, baseD], r1 = [baseW, 0, 0], r2 = [0, 0, -baseD], r3 = [-baseW, 0, 0];
+      const m0 = [midX, midY, midZ + midD], m1 = [midX + midW, midY, midZ],
+            m2 = [midX, midY, midZ - midD], m3 = [midX - midW, midY, midZ];
+      const tip = [tipBendX, length, tipBendZ];
+
+      const cRoot = [0.80, 0.56, 0.08]; // deep golden-amber shadow at root
+      const cMid  = [1.00, 0.84, 0.24]; // vivid Super Saiyan gold
+      const cTip  = [1.00, 0.97, 0.68]; // luminous electric-blonde tip
+
+      const pos = [];
+      const col = [];
+      function pushTri(a, ca, b, cb, c, cc) {
+        pos.push(...a, ...b, ...c);
+        col.push(...ca, ...cb, ...cc);
+      }
+
+      const ringR = [r0, r1, r2, r3];
+      const ringM = [m0, m1, m2, m3];
+      for (let i = 0; i < 4; i++) {
+        const j = (i + 1) % 4;
+        // Lower facet quad (root -> mid)
+        pushTri(ringR[i], cRoot, ringR[j], cRoot, ringM[j], cMid);
+        pushTri(ringR[i], cRoot, ringM[j], cMid, ringM[i], cMid);
+        // Upper razor pyramid facet (mid -> tip)
+        pushTri(ringM[i], cMid, ringM[j], cMid, tip, cTip);
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
       geo.computeVertexNormals();
       return geo;
     }
@@ -1936,19 +2209,20 @@
         shoeGrp.add(sole);
       });
 
-      // Untucked Relaxed Casual T-Shirt
+      // Untucked relaxed cotton T-shirt
       p.torso.position.set(0, 0.06, 0);
       p.hips.add(p.torso);
 
       const torsoGeo = createLathe([
-        [0.164, -0.06], [0.160, 0.04], [0.164, 0.18],
-        [0.182, 0.35], [0.188, 0.42], [0.138, 0.468], [0.068, 0.495]
+        [0.164, -0.06], [0.160, 0.04], [0.164, 0.18], [0.182, 0.35],
+        [0.188, 0.42], [0.138, 0.468], [0.068, 0.495]
       ], 36);
       const torsoMesh = new THREE.Mesh(torsoGeo, teeMat);
       torsoMesh.scale.set(1.05, 1.0, 0.70);
       torsoMesh.castShadow = true;
       p.torso.add(torsoMesh);
 
+      // Head, Neck, Ears & Iconic Sharp Faceted Super Saiyan Hair
       p.head.position.set(0, 0.495, 0);
       p.torso.add(p.head);
 
@@ -1971,143 +2245,79 @@
         p.head.add(ear);
       });
 
-      // Authentic Super Saiyan Hair: Sharp 4-Sided Diamond-Ridge Flame Spikes + Root-to-Tip Gold Gradient
       const hairGrp = new THREE.Group();
       hairGrp.position.set(0, 0.172, -0.005);
       p.head.add(hairGrp);
 
-      const ssjHairMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
+      const ssjMat = new THREE.MeshStandardMaterial({
         vertexColors: true,
-        emissive: 0x5c3d00,
-        emissiveIntensity: 0.24,
-        roughness: 0.56,
-        metalness: 0.04,
         flatShading: true,
-        side: THREE.DoubleSide
+        emissive: 0x5c3e00,
+        emissiveIntensity: 0.28,
+        roughness: 0.32,
+        metalness: 0.18
       });
 
+      const ssjBaseCapMat = new THREE.MeshStandardMaterial({
+        color: 0xe6b422,
+        emissive: 0x4a3000,
+        emissiveIntensity: 0.22,
+        roughness: 0.38,
+        metalness: 0.14
+      });
+
+      // Snug golden hair base covering scalp cleanly
       const scalpCap = new THREE.Mesh(
-        new THREE.SphereGeometry(0.106, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.66),
-        new THREE.MeshStandardMaterial({
-          color: 0xe6b422,
-          emissive: 0x4a3000,
-          emissiveIntensity: 0.22,
-          roughness: 0.58,
-          metalness: 0.04,
-          flatShading: true
-        })
+        new THREE.SphereGeometry(0.106, 22, 16, 0, Math.PI * 2, 0, Math.PI * 0.66),
+        ssjBaseCapMat
       );
-      scalpCap.scale.set(0.95, 1.04, 1.01);
-      scalpCap.position.set(0, 0.004, 0.005);
+      scalpCap.scale.set(0.94, 1.05, 1.01);
+      scalpCap.position.set(0, 0.003, 0.004);
       hairGrp.add(scalpCap);
 
-      function createSSJSpike(root, mid, tip, baseW, baseD) {
-        const p0 = new THREE.Vector3(...root);
-        const p1 = new THREE.Vector3(...mid);
-        const p2 = new THREE.Vector3(...tip);
-        const curve = new THREE.QuadraticBezierCurve3(p0, p1, p2);
-
-        const segs = 5;
-        const pts = [];
-        for (let i = 0; i <= segs; i++) pts.push(curve.getPoint(i / segs));
-
-        const mainDir = p2.clone().sub(p0).normalize();
-        const refUp = Math.abs(mainDir.z) < 0.9 ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(0, 1, 0);
-        const sideAxis = new THREE.Vector3().crossVectors(refUp, mainDir).normalize();
-        const depthAxis = new THREE.Vector3().crossVectors(mainDir, sideAxis).normalize();
-
-        const rootCol = new THREE.Color(0xc98d14);
-        const midCol  = new THREE.Color(0xffd52e);
-        const tipCol  = new THREE.Color(0xfff6a8);
-
-        const ringVerts = [];
-        const ringCols = [];
-        for (let i = 0; i <= segs; i++) {
-          const t = i / segs;
-          const taper = Math.max(0, 1 - t);
-          const w = t === 1 ? 0.001 : baseW * (t < 0.22 ? 0.85 + 0.15 * (t / 0.22) : Math.pow(taper / 0.78, 0.92));
-          const d = t === 1 ? 0.001 : baseD * (t < 0.22 ? 0.85 + 0.15 * (t / 0.22) : Math.pow(taper / 0.78, 0.92));
-
-          const c = pts[i];
-          ringVerts.push([
-            c.clone().addScaledVector(depthAxis,  d),
-            c.clone().addScaledVector(sideAxis,   w),
-            c.clone().addScaledVector(depthAxis, -d * 0.82),
-            c.clone().addScaledVector(sideAxis,  -w)
-          ]);
-
-          const col = t < 0.45
-            ? rootCol.clone().lerp(midCol, t / 0.45)
-            : midCol.clone().lerp(tipCol, (t - 0.45) / 0.55);
-          ringCols.push(col);
-        }
-
-        const positions = [];
-        const colors = [];
-        function pushTri(vA, vB, vC, cA, cB, cC) {
-          positions.push(vA.x, vA.y, vA.z, vB.x, vB.y, vB.z, vC.x, vC.y, vC.z);
-          colors.push(cA.r, cA.g, cA.b, cB.r, cB.g, cB.b, cC.r, cC.g, cC.b);
-        }
-
-        for (let i = 0; i < segs; i++) {
-          const r0 = ringVerts[i];
-          const r1 = ringVerts[i + 1];
-          const c0 = ringCols[i];
-          const c1 = ringCols[i + 1];
-          for (let j = 0; j < 4; j++) {
-            const jn = (j + 1) % 4;
-            if (i === segs - 1) {
-              pushTri(r0[j], r0[jn], pts[segs], c0, c0, c1);
-            } else {
-              pushTri(r0[j], r0[jn], r1[jn], c0, c0, c1);
-              pushTri(r0[j], r1[jn], r1[j],  c0, c1, c1);
-            }
-          }
-        }
-
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-        geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-        geo.computeVertexNormals();
-        return geo;
-      }
-
-      const ssjSpikes = [
-        // Tall Crown Flame Spikes
-        { r: [ 0.000, 0.055,  0.000], m: [ 0.006, 0.165,  0.012], t: [ 0.012, 0.275,  0.028], w: 0.052, d: 0.044 },
-        { r: [-0.036, 0.052,  0.005], m: [-0.068, 0.155,  0.016], t: [-0.105, 0.248,  0.032], w: 0.046, d: 0.038 },
-        { r: [ 0.036, 0.052,  0.005], m: [ 0.068, 0.155,  0.016], t: [ 0.105, 0.248,  0.032], w: 0.046, d: 0.038 },
-        { r: [-0.018, 0.058, -0.025], m: [-0.034, 0.168, -0.028], t: [-0.048, 0.260, -0.020], w: 0.044, d: 0.036 },
-        { r: [ 0.024, 0.058, -0.022], m: [ 0.042, 0.165, -0.024], t: [ 0.058, 0.252, -0.016], w: 0.044, d: 0.036 },
-        // Wide Jagged Side-Crown Spikes
-        { r: [-0.064, 0.042,  0.012], m: [-0.122, 0.118,  0.025], t: [-0.182, 0.195,  0.038], w: 0.044, d: 0.035 },
-        { r: [ 0.064, 0.042,  0.012], m: [ 0.122, 0.118,  0.025], t: [ 0.182, 0.195,  0.038], w: 0.044, d: 0.035 },
-        { r: [-0.078, 0.022,  0.018], m: [-0.145, 0.065,  0.035], t: [-0.205, 0.110,  0.048], w: 0.040, d: 0.032 },
-        { r: [ 0.078, 0.022,  0.018], m: [ 0.145, 0.065,  0.035], t: [ 0.205, 0.110,  0.048], w: 0.040, d: 0.032 },
-        { r: [-0.082, 0.002,  0.025], m: [-0.138, 0.014,  0.045], t: [-0.184, 0.028,  0.062], w: 0.034, d: 0.028 },
-        { r: [ 0.082, 0.002,  0.025], m: [ 0.138, 0.014,  0.045], t: [ 0.184, 0.028,  0.062], w: 0.034, d: 0.028 },
-        // Upper-Back & Mid-Back Layered Sharp Spikes
-        { r: [ 0.000, 0.042,  0.048], m: [ 0.000, 0.118,  0.092], t: [ 0.000, 0.188,  0.125], w: 0.048, d: 0.038 },
-        { r: [-0.044, 0.034,  0.046], m: [-0.082, 0.095,  0.088], t: [-0.122, 0.152,  0.118], w: 0.042, d: 0.034 },
-        { r: [ 0.044, 0.034,  0.046], m: [ 0.082, 0.095,  0.088], t: [ 0.122, 0.152,  0.118], w: 0.042, d: 0.034 },
-        { r: [-0.056, 0.012,  0.058], m: [-0.098, 0.036,  0.105], t: [-0.134, 0.058,  0.138], w: 0.038, d: 0.030 },
-        { r: [ 0.056, 0.012,  0.058], m: [ 0.098, 0.036,  0.105], t: [ 0.134, 0.058,  0.138], w: 0.038, d: 0.030 },
-        { r: [ 0.000, 0.012,  0.068], m: [ 0.000, 0.042,  0.118], t: [ 0.000, 0.072,  0.154], w: 0.042, d: 0.034 },
-        // Lower Back & Nape Taper Spikes
-        { r: [-0.058, -0.012, 0.062], m: [-0.088, -0.028, 0.095], t: [-0.112, -0.048, 0.116], w: 0.030, d: 0.024 },
-        { r: [ 0.058, -0.012, 0.062], m: [ 0.088, -0.028, 0.095], t: [ 0.112, -0.048, 0.116], w: 0.030, d: 0.024 },
-        { r: [-0.032, -0.020, 0.072], m: [-0.042, -0.056, 0.092], t: [-0.050, -0.098, 0.102], w: 0.028, d: 0.022 },
-        { r: [ 0.032, -0.020, 0.072], m: [ 0.042, -0.056, 0.092], t: [ 0.050, -0.098, 0.102], w: 0.028, d: 0.022 },
-        { r: [ 0.000, -0.022, 0.076], m: [ 0.000, -0.062, 0.096], t: [ 0.000, -0.106, 0.106], w: 0.032, d: 0.024 }
+      // 22 sharp upward-flaring Super Saiyan spikes arranged in 3 dramatic silhouette tiers!
+      const spikeConfigs = [
+        // Crown central towering flame spikes
+        { pos: [0.00, 0.075, -0.010], rot: [0.12, 0.0, 0.0], len: 0.23, w: 0.048, d: 0.044, bx: 0.005, bz: 0.025 },
+        { pos: [-0.036, 0.072, -0.004], rot: [0.14, 0.1, 0.32], len: 0.21, w: 0.044, d: 0.040, bx: -0.02, bz: 0.02 },
+        { pos: [0.036, 0.072, -0.004], rot: [0.14, -0.1, -0.32], len: 0.21, w: 0.044, d: 0.040, bx: 0.02, bz: 0.02 },
+        { pos: [0.00, 0.068, 0.038], rot: [0.42, 0.0, 0.0], len: 0.20, w: 0.046, d: 0.040, bx: 0.0, bz: 0.03 },
+        { pos: [-0.046, 0.062, 0.032], rot: [0.36, 0.2, 0.48], len: 0.185, w: 0.042, d: 0.036, bx: -0.02, bz: 0.02 },
+        { pos: [0.046, 0.062, 0.032], rot: [0.36, -0.2, -0.48], len: 0.185, w: 0.042, d: 0.036, bx: 0.02, bz: 0.02 },
+        // Mid-tier side & temple flaring spikes (classic Dragon Ball wide silhouette)
+        { pos: [-0.072, 0.048, -0.005], rot: [0.10, 0.2, 0.72], len: 0.175, w: 0.040, d: 0.034, bx: -0.02, bz: 0.015 },
+        { pos: [0.072, 0.048, -0.005], rot: [0.10, -0.2, -0.72], len: 0.175, w: 0.040, d: 0.034, bx: 0.02, bz: 0.015 },
+        { pos: [-0.078, 0.030, 0.038], rot: [0.32, 0.3, 0.92], len: 0.16, w: 0.036, d: 0.032, bx: -0.018, bz: 0.02 },
+        { pos: [0.078, 0.030, 0.038], rot: [0.32, -0.3, -0.92], len: 0.16, w: 0.036, d: 0.032, bx: 0.018, bz: 0.02 },
+        { pos: [0.00, 0.042, 0.072], rot: [0.76, 0.0, 0.0], len: 0.17, w: 0.044, d: 0.036, bx: 0.0, bz: 0.025 },
+        { pos: [-0.044, 0.032, 0.068], rot: [0.68, 0.25, 0.56], len: 0.155, w: 0.038, d: 0.032, bx: -0.015, bz: 0.02 },
+        { pos: [0.044, 0.032, 0.068], rot: [0.68, -0.25, -0.56], len: 0.155, w: 0.038, d: 0.032, bx: 0.015, bz: 0.02 },
+        // Lower-side & rear swept spikes
+        { pos: [-0.084, 0.006, 0.025], rot: [0.22, 0.35, 1.24], len: 0.13, w: 0.032, d: 0.028, bx: -0.01, bz: 0.015 },
+        { pos: [0.084, 0.006, 0.025], rot: [0.22, -0.35, -1.24], len: 0.13, w: 0.032, d: 0.028, bx: 0.01, bz: 0.015 },
+        { pos: [-0.056, 0.002, 0.074], rot: [1.05, 0.25, 0.65], len: 0.135, w: 0.034, d: 0.028, bx: -0.01, bz: 0.015 },
+        { pos: [0.056, 0.002, 0.074], rot: [1.05, -0.25, -0.65], len: 0.135, w: 0.034, d: 0.028, bx: 0.01, bz: 0.015 },
+        { pos: [0.00, 0.006, 0.082], rot: [1.14, 0.0, 0.0], len: 0.14, w: 0.038, d: 0.030, bx: 0.0, bz: 0.018 },
+        // Nape lower sharp points
+        { pos: [-0.034, -0.024, 0.076], rot: [1.58, 0.18, 0.34], len: 0.095, w: 0.026, d: 0.022, bx: 0, bz: 0.01 },
+        { pos: [0.034, -0.024, 0.076], rot: [1.58, -0.18, -0.34], len: 0.095, w: 0.026, d: 0.022, bx: 0, bz: 0.01 },
+        { pos: [0.00, -0.028, 0.080], rot: [1.66, 0.0, 0.0], len: 0.10, w: 0.028, d: 0.024, bx: 0, bz: 0.01 },
+        // Front forehead bang spike peeking forward
+        { pos: [0.00, 0.070, -0.055], rot: [-0.28, 0.0, 0.0], len: 0.16, w: 0.038, d: 0.032, bx: 0, bz: -0.01 }
       ];
-      ssjSpikes.forEach((s) => {
-        const mesh = new THREE.Mesh(createSSJSpike(s.r, s.m, s.t, s.w, s.d), ssjHairMat);
-        mesh.castShadow = true;
-        hairGrp.add(mesh);
+
+      spikeConfigs.forEach((sc) => {
+        const spike = new THREE.Mesh(
+          createSSJSpike(sc.len, sc.w, sc.d, sc.bx, sc.bz),
+          ssjMat
+        );
+        spike.position.set(...sc.pos);
+        spike.rotation.set(...sc.rot);
+        spike.castShadow = true;
+        hairGrp.add(spike);
       });
 
-      // Sleeves + Arms + Hands
+      // Seamlessly embedded T-shirt sleeves, arms & hands
       const sleeveGeo = createLathe([
         [0.058, -0.14], [0.064, -0.06], [0.065, 0.0], [0.052, 0.035]
       ], 22);
@@ -2179,17 +2389,32 @@
     });
 
     // =========================================================================
-    // 5. DYNAMIC HOOPS SYSTEM (All Hoops Coplanar + 6 Dynamic Gimmicks)
+    // 5. DYNAMIC HOOPS SYSTEM (All Hoops Coplanar + 6 Dynamic Gimmicks + Clean Dispose)
     // =========================================================================
     const hoopsGroup = new THREE.Group();
     scene.add(hoopsGroup);
     let hoops = [];
 
-    function buildLevelHoops(cfg) {
+    function disposeHoopsGroup() {
       while (hoopsGroup.children.length > 0) {
-        hoopsGroup.remove(hoopsGroup.children[0]);
+        const child = hoopsGroup.children[0];
+        child.traverse((obj) => {
+          if (obj.geometry) obj.geometry.dispose();
+          if (obj.material) {
+            if (Array.isArray(obj.material)) {
+              obj.material.forEach((m) => { if (m && m !== darkMetalMat) m.dispose(); });
+            } else if (obj.material !== darkMetalMat) {
+              obj.material.dispose();
+            }
+          }
+        });
+        hoopsGroup.remove(child);
       }
       hoops = [];
+    }
+
+    function buildLevelHoops(cfg) {
+      disposeHoopsGroup();
 
       const s = cfg.scale;
       const baseBoardW = 0.60 * s;
@@ -2256,7 +2481,7 @@
           grp.add(mountBlock);
         }
 
-        const netH = 0.29 * Math.max(0.75, s);
+        const netH = 0.24 * Math.max(0.68, s);
         const netGeo = new THREE.CylinderGeometry(baseRimR * 0.96, baseRimR * 0.58, netH, 16, 6, true);
         const origPos = new Float32Array(netGeo.attributes.position.array);
         const netMat = new THREE.MeshStandardMaterial({
@@ -2270,6 +2495,7 @@
         hoops.push({
           id: idx,
           grp,
+          boardMesh: board,
           baseX: hDef.x,
           baseY: hDef.y,
           x: hDef.x,
@@ -2295,6 +2521,7 @@
           netOrigPos: origPos,
           netSwish: 0,
           rimWobble: 0,
+          boardShake: 0,
           motion: hDef.motion || null,
           flip: hDef.flip || null,
           vanish: hDef.vanish || null,
@@ -2390,6 +2617,7 @@
           h.grp.rotation.y = targetAngle;
           h.isFlippedBack = Math.cos(targetAngle) < 0.25;
         } else {
+          h.flipAngle = 0;
           h.grp.rotation.y = 0;
           h.isFlippedBack = false;
         }
@@ -2422,7 +2650,7 @@
     }
 
     // =========================================================================
-    // 6. BASKETBALL PHYSICS, AIM ARC & ACTIVE BALLS
+    // 6. BASKETBALL PHYSICS, AIM ARC, SWISH HALOS & MOTION TRAIL
     // =========================================================================
     const BALL_RADIUS = 0.105;
     const GRAVITY = -9.6;
@@ -2438,12 +2666,12 @@
     heldBall.castShadow = true;
     scene.add(heldBall);
 
-    const AIM_DOTS = 16;
+    const AIM_DOTS = 18;
     const aimDots = [];
-    const dotGeo = new THREE.SphereGeometry(0.018, 10, 10);
+    const dotGeo = new THREE.SphereGeometry(0.017, 10, 10);
     for (let i = 0; i < AIM_DOTS; i++) {
       const m = new THREE.MeshBasicMaterial({
-        color: 0xffdf85, transparent: true, opacity: (1 - i / AIM_DOTS) * 0.78
+        color: 0xffdf85, transparent: true, opacity: (1 - i / AIM_DOTS) * 0.82
       });
       const dot = new THREE.Mesh(dotGeo, m);
       dot.visible = false;
@@ -2451,8 +2679,23 @@
       aimDots.push(dot);
     }
 
+    let swishRings = [];
+    const swishRingGeo = new THREE.RingGeometry(0.16, 0.21, 32);
+    function spawnSwishRing(x, y, z, colorHex = 0x34d399) {
+      const mat = new THREE.MeshBasicMaterial({
+        color: colorHex, transparent: true, opacity: 0.9,
+        side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
+      });
+      const mesh = new THREE.Mesh(swishRingGeo, mat);
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.set(x, y, z);
+      scene.add(mesh);
+      swishRings.push({ mesh, mat, life: 1.0 });
+    }
+
     let flyingBalls = [];
     const ballShadowGeo = new THREE.CircleGeometry(0.13, 18);
+    const trailDotGeo = new THREE.SphereGeometry(0.036, 8, 8);
 
     function spawnThrownBall(vel, spinX, spinZ) {
       const mesh = new THREE.Mesh(ballGeo, ballMat);
@@ -2466,10 +2709,25 @@
       shadow.rotation.x = -Math.PI / 2;
       scene.add(shadow);
 
+      const trail = [];
+      for (let t = 0; t < 6; t++) {
+        const tm = new THREE.MeshBasicMaterial({
+          color: 0xffb35c, transparent: true, opacity: (1 - t / 6) * 0.34,
+          depthWrite: false, blending: THREE.AdditiveBlending
+        });
+        const td = new THREE.Mesh(trailDotGeo, tm);
+        td.position.copy(mesh.position);
+        td.scale.setScalar(1 - t * 0.13);
+        scene.add(td);
+        trail.push({ mesh: td, mat: tm });
+      }
+
       flyingBalls.push({
         mesh,
         shadow,
         shadowMat,
+        trail,
+        trailHistory: [],
         pos: mesh.position.clone(),
         prevPos: mesh.position.clone(),
         vel: vel.clone(),
@@ -2483,12 +2741,20 @@
       });
     }
 
-    function clearFlyingBalls() {
-      flyingBalls.forEach((b) => {
-        scene.remove(b.mesh);
-        scene.remove(b.shadow);
+    function removeFlyingBallAt(idx) {
+      const b = flyingBalls[idx];
+      scene.remove(b.mesh);
+      scene.remove(b.shadow);
+      b.shadowMat.dispose();
+      b.trail.forEach((tr) => {
+        scene.remove(tr.mesh);
+        tr.mat.dispose();
       });
-      flyingBalls = [];
+      flyingBalls.splice(idx, 1);
+    }
+
+    function clearFlyingBalls() {
+      while (flyingBalls.length > 0) removeFlyingBallAt(flyingBalls.length - 1);
     }
 
     // =========================================================================
@@ -2563,12 +2829,16 @@
     const state = {
       screen: 'home',
       level: 1,
+      unlockedLevel: loadUnlockedLevel(),
       cfg: null,
       ballsLeft: 5,
       scoredCount: 0,
+      streak: 0,
       hasThrownOnce: false,
       checkingResult: false,
-      reloadCooldown: 0
+      reloadCooldown: 0,
+      resultTimer: null,
+      camShake: 0
     };
 
     const homeScreen = document.getElementById('home-screen');
@@ -2581,11 +2851,33 @@
     const swipeCue = document.getElementById('swipe-cue');
     const calloutEl = document.getElementById('callout');
     const calloutText = document.getElementById('callout-text');
+    const streakBadge = document.getElementById('streak-badge');
+    const powerMeter = document.getElementById('power-meter');
+    const powerFill = document.getElementById('power-fill');
+    const btnStart = document.getElementById('btn-start');
 
     const modalRules = document.getElementById('modal-rules');
     const modalClear = document.getElementById('modal-clear');
     const modalFail = document.getElementById('modal-fail');
     const modalVictory = document.getElementById('modal-victory');
+    const modalPause = document.getElementById('modal-pause');
+    const levelGrid = document.getElementById('level-grid');
+
+    function updateStartButtonLabel() {
+      btnStart.textContent = state.unlockedLevel > 1
+        ? `繼續遊戲（第 ${state.unlockedLevel} 關）`
+        : '開始遊戲';
+    }
+    updateStartButtonLabel();
+
+    function updateStreakUI() {
+      if (state.streak >= 2) {
+        streakBadge.textContent = `連續命中 × ${state.streak}`;
+        streakBadge.classList.add('show');
+      } else {
+        streakBadge.classList.remove('show');
+      }
+    }
 
     let calloutTimer = null;
     function showCallout(text, mode = 'gold', duration = 1150) {
@@ -2609,16 +2901,46 @@
       modalClear.classList.remove('open');
       modalFail.classList.remove('open');
       modalVictory.classList.remove('open');
+      modalPause.classList.remove('open');
       fireworksActive = false;
     }
 
+    function buildLevelGrid() {
+      levelGrid.innerHTML = '';
+      for (let i = 1; i <= TOTAL_LEVELS; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'lvl-chip';
+        btn.textContent = String(i);
+        if (i === state.level) btn.classList.add('current');
+        if (i > state.unlockedLevel) {
+          btn.classList.add('locked');
+          btn.disabled = true;
+        } else {
+          btn.addEventListener('click', () => {
+            audio.init();
+            audio.playUiTap();
+            loadLevel(i);
+          });
+        }
+        levelGrid.appendChild(btn);
+      }
+    }
+
     function loadLevel(lvl) {
+      clearTimeout(state.resultTimer);
+      state.resultTimer = null;
       closeAllModals();
       clearFlyingBalls();
+      drag.active = false;
+      drag.pointerId = null;
+      aimDots.forEach((d) => (d.visible = false));
+      powerMeter.classList.remove('visible');
+
       state.level = lvl;
       state.cfg = getLevelConfig(lvl);
       state.ballsLeft = state.cfg.balls;
       state.scoredCount = 0;
+      state.streak = 0;
       state.checkingResult = false;
       state.reloadCooldown = 0;
       state.screen = 'playing';
@@ -2628,11 +2950,15 @@
       heldBall.position.copy(HAND_POS);
       player.posX = -0.08;
       player.moveDir = 0;
+      player.loadAmount = 0;
+      player.aimYaw = 0;
+      player.shootAnim = 0;
       player.root.position.x = player.posX;
       homeScreen.classList.add('hidden');
       hud.classList.add('visible');
       moveControls.classList.add('visible');
       updateHUD();
+      updateStreakUI();
 
       if (state.cfg.gimmickLabel) {
         showCallout(state.cfg.gimmickLabel, false, 1650);
@@ -2645,9 +2971,15 @@
     function onHoopScored(hoop, ball) {
       const isNew = !hoop.scored;
       hoop.netSwish = 1.0;
-      audio.playSwish(isNew);
 
       if (isNew) {
+        state.streak += 1;
+        updateStreakUI();
+        audio.playSwish(true, state.streak);
+        triggerHaptic(18);
+        state.camShake = Math.min(0.032, 0.015 + state.streak * 0.004);
+        spawnSwishRing(hoop.x, hoop.y, hoop.z, 0x34d399);
+
         hoop.scored = true;
         hoop.frontMat.map = texBoardScored;
         hoop.frontMat.needsUpdate = true;
@@ -2661,7 +2993,7 @@
         spawnScreenSparks(new THREE.Vector3(hoop.x, hoop.y, hoop.z), '#6ee7b7', 28);
 
         if (!ball.touchedRim && !ball.touchedBoard) {
-          showCallout('空心進球！', true);
+          showCallout(state.streak >= 3 ? `空心進球！${state.streak} 連擊！` : '空心進球！', true);
         } else if (ball.touchedBoard) {
           showCallout('擦板進球！', true);
         } else {
@@ -2670,9 +3002,17 @@
 
         if (state.scoredCount >= state.cfg.hoops.length && !state.checkingResult) {
           state.checkingResult = true;
-          setTimeout(triggerLevelClear, 680);
+          if (state.level < TOTAL_LEVELS) {
+            state.unlockedLevel = Math.max(state.unlockedLevel, state.level + 1);
+            saveUnlockedLevel(state.unlockedLevel);
+            updateStartButtonLabel();
+          }
+          clearTimeout(state.resultTimer);
+          state.resultTimer = setTimeout(triggerLevelClear, 680);
         }
       } else {
+        audio.playSwish(false, 1);
+        spawnSwishRing(hoop.x, hoop.y, hoop.z, 0xffd166);
         spawnScreenSparks(new THREE.Vector3(hoop.x, hoop.y, hoop.z), '#ffd166', 14);
         showCallout('此籃框已進過球', false);
       }
@@ -2740,14 +3080,21 @@
     function updateAimPreview() {
       if (!drag.active || state.screen !== 'playing') {
         aimDots.forEach((d) => (d.visible = false));
+        powerMeter.classList.remove('visible');
         return;
       }
       const dy = drag.currY - drag.startY;
       if (dy > -16) {
         aimDots.forEach((d) => (d.visible = false));
+        powerMeter.classList.remove('visible');
         return;
       }
       const dx = drag.currX - drag.startX;
+      const h = container.clientHeight || window.innerHeight;
+      const pRatio = Math.min(1, Math.max(0, -dy / (h * 0.44)));
+      powerMeter.classList.add('visible');
+      powerFill.style.width = `${Math.round(pRatio * 100)}%`;
+
       const vel = computeLaunchVelocity(dx, dy);
       const origin = getReleasePosition();
 
@@ -2758,6 +3105,7 @@
           origin.y + vel.y * t + 0.5 * GRAVITY * t * t,
           origin.z + vel.z * t
         );
+        aimDots[i].material.color.setHex(pRatio > 0.78 ? 0xff9f43 : 0xffdf85);
         aimDots[i].visible = true;
       }
     }
@@ -2793,6 +3141,7 @@
       drag.active = false;
       drag.pointerId = null;
       aimDots.forEach((d) => (d.visible = false));
+      powerMeter.classList.remove('visible');
 
       if (dy < -24 && state.screen === 'playing' && state.ballsLeft > 0) {
         const relPos = getReleasePosition();
@@ -2800,6 +3149,7 @@
         const vel = computeLaunchVelocity(dx, dy);
         spawnThrownBall(vel, -8.5 - Math.random() * 2.5, -dx * 0.015);
         audio.playThrow();
+        triggerHaptic(8);
         player.shootAnim = 1.0;
         player.loadAmount = 0;
 
@@ -2822,7 +3172,7 @@
     window.addEventListener('pointercancel', onPointerUp);
 
     // =========================================================================
-    // 10. PHYSICS STEP
+    // 10. HIGH-PRECISION 6-SUBSTEP PHYSICS & GROUNDED PLAYER KINEMATICS
     // =========================================================================
     function stepPhysics(dt) {
       if (state.reloadCooldown > 0) {
@@ -2834,12 +3184,8 @@
       }
 
       const pt = performance.now() * 0.003;
-      if (player.shootAnim > 0) {
-        player.shootAnim = Math.max(0, player.shootAnim - dt * 1.9);
-      }
-      if (player.celebrateAnim > 0) {
-        player.celebrateAnim = Math.max(0, player.celebrateAnim - dt * 1.4);
-      }
+      if (player.shootAnim > 0) player.shootAnim = Math.max(0, player.shootAnim - dt * 1.9);
+      if (player.celebrateAnim > 0) player.celebrateAnim = Math.max(0, player.celebrateAnim - dt * 1.4);
       if (!drag.active) {
         player.aimYaw += (0 - player.aimYaw) * Math.min(1, dt * 6);
         player.loadAmount += (0 - player.loadAmount) * Math.min(1, dt * 8);
@@ -2915,7 +3261,7 @@
         if (!drag.active) heldBall.rotation.y += dt * 0.35;
       }
 
-      const substeps = 4;
+      const substeps = 6;
       const hdt = dt / substeps;
 
       for (let i = flyingBalls.length - 1; i >= 0; i--) {
@@ -2932,15 +3278,16 @@
             if (h.isIntangible) continue;
 
             if (h.isFlippedBack) {
-              const cardZ = h.z + 0.04;
+              const cardZ = h.z + h.localBoardZ * h.dynamicScale * Math.cos(h.flipAngle) + 0.014 * h.dynamicScale;
               const inCardX = Math.abs(b.pos.x - h.x) <= h.boardW * 0.52 + BALL_RADIUS * 0.35;
               const inCardY = Math.abs(b.pos.y - h.boardCenterY) <= h.boardH * 0.54 + BALL_RADIUS * 0.35;
-              if (inCardX && inCardY && b.prevPos.z >= cardZ + BALL_RADIUS * 0.7 && b.pos.z < cardZ + BALL_RADIUS) {
+              if (inCardX && inCardY && b.prevPos.z >= cardZ + BALL_RADIUS * 0.6 && b.pos.z < cardZ + BALL_RADIUS) {
                 b.pos.z = cardZ + BALL_RADIUS;
                 const spd = Math.abs(b.vel.z);
                 b.vel.z = Math.abs(b.vel.z) * 0.58;
                 b.vel.x *= 0.85;
                 b.touchedBoard = true;
+                h.boardShake = Math.min(1, h.boardShake + spd * 0.16);
                 if (spd > 0.6) audio.playBackboard(spd / 4.5);
               }
               continue;
@@ -2955,6 +3302,7 @@
               b.vel.x *= 0.84;
               b.vel.y *= 0.88;
               b.touchedBoard = true;
+              h.boardShake = Math.min(1, h.boardShake + spd * 0.15);
               if (spd > 0.6) audio.playBackboard(spd / 4.5);
             }
 
@@ -3017,8 +3365,8 @@
             }
           }
 
-          if (b.pos.z < -3.20 + BALL_RADIUS) {
-            b.pos.z = -3.20 + BALL_RADIUS;
+          if (b.pos.z < -3.34 + BALL_RADIUS) {
+            b.pos.z = -3.34 + BALL_RADIUS;
             b.vel.z = Math.abs(b.vel.z) * 0.48;
           }
           if (Math.abs(b.pos.x) > 1.82) {
@@ -3032,9 +3380,12 @@
           const floorY = Math.max(0, rampY) + BALL_RADIUS;
           if (b.pos.y < floorY) {
             b.pos.y = floorY;
-            if (!b.missReported && b.scoredHoopIds.size === 0 && b.age > 0.35) {
+            if (!b.missReported && b.scoredHoopIds.size === 0 && b.age > 0.20) {
               b.missReported = true;
+              state.streak = 0;
+              updateStreakUI();
               audio.playMissX();
+              triggerHaptic(14);
               if (state.screen === 'playing') showCallout('✕ 未投中', 'miss', 780);
             }
             if (b.vel.y < -0.75) {
@@ -3054,6 +3405,17 @@
         b.mesh.rotation.x += b.spin.x * dt;
         b.mesh.rotation.z += b.spin.z * dt;
 
+        b.trailHistory.unshift(b.pos.clone());
+        if (b.trailHistory.length > b.trail.length * 2) b.trailHistory.pop();
+        for (let ti = 0; ti < b.trail.length; ti++) {
+          const histIdx = Math.min(b.trailHistory.length - 1, ti * 2 + 1);
+          if (histIdx >= 0) {
+            b.trail[ti].mesh.position.copy(b.trailHistory[histIdx]);
+            const speedFade = Math.min(1, b.vel.length() / 4.5);
+            b.trail[ti].mat.opacity = (1 - ti / b.trail.length) * 0.34 * speedFade;
+          }
+        }
+
         const shadowFloorY = b.pos.z < -1.42 && b.pos.z > -3.55
           ? 0.70 + (-b.pos.z - 2.5) * 0.24
           : 0.0;
@@ -3068,9 +3430,14 @@
         }
         const maxLife = state.ballsLeft === 0 ? 0.75 : 2.2;
         if (b.age > 3.0 || b.settledAge > maxLife || b.pos.z > 0.6) {
-          scene.remove(b.mesh);
-          scene.remove(b.shadow);
-          flyingBalls.splice(i, 1);
+          if (!b.missReported && b.scoredHoopIds.size === 0) {
+            b.missReported = true;
+            state.streak = 0;
+            updateStreakUI();
+            audio.playMissX();
+            if (state.screen === 'playing') showCallout('✕ 未投中', 'miss', 780);
+          }
+          removeFlyingBallAt(i);
         }
       }
 
@@ -3082,7 +3449,8 @@
         state.scoredCount < state.cfg.hoops.length
       ) {
         state.checkingResult = true;
-        setTimeout(triggerLevelFail, 320);
+        clearTimeout(state.resultTimer);
+        state.resultTimer = setTimeout(triggerLevelFail, 320);
       }
     }
 
@@ -3097,8 +3465,10 @@
       lastTime = now;
       const t = now * 0.001;
 
-      updateDynamicHoops(t);
-      stepPhysics(dt);
+      if (state.screen !== 'paused') {
+        updateDynamicHoops(t);
+        stepPhysics(dt);
+      }
 
       for (let i = 0; i < hoops.length; i++) {
         const h = hoops[i];
@@ -3107,6 +3477,13 @@
           h.rimPivot.rotation.x = Math.sin(t * 48) * 0.09 * h.rimWobble;
         } else {
           h.rimPivot.rotation.x = 0;
+        }
+
+        if (h.boardShake > 0.002) {
+          h.boardShake *= Math.pow(0.04, dt);
+          h.boardMesh.position.z = h.localBoardZ - Math.sin(t * 52) * 0.012 * h.boardShake;
+        } else {
+          h.boardMesh.position.z = h.localBoardZ;
         }
 
         if (h.netSwish > 0.005) {
@@ -3125,14 +3502,45 @@
         }
       }
 
+      for (let r = swishRings.length - 1; r >= 0; r--) {
+        const sr = swishRings[r];
+        sr.life -= dt * 2.2;
+        if (sr.life <= 0) {
+          scene.remove(sr.mesh);
+          sr.mat.dispose();
+          swishRings.splice(r, 1);
+        } else {
+          sr.mesh.scale.setScalar(1 + (1 - sr.life) * 1.45);
+          sr.mat.opacity = sr.life * 0.85;
+        }
+      }
+
+      const mArr = ambientMotes.geometry.attributes.position.array;
+      for (let m = 0; m < moteCount; m++) {
+        mArr[m * 3 + 1] += dt * 0.07;
+        mArr[m * 3] += Math.sin(t * 0.9 + motePhases[m]) * dt * 0.04;
+        if (mArr[m * 3 + 1] > 3.2) mArr[m * 3 + 1] = 0.55;
+      }
+      ambientMotes.geometry.attributes.position.needsUpdate = true;
+
       lanterns.forEach((l) => {
         l.group.rotation.z = Math.sin(t * 1.35 + l.phase) * 0.055;
         l.group.rotation.x = Math.cos(t * 1.05 + l.phase) * 0.03;
       });
 
       bulbs.forEach((b) => {
-        b.mesh.scale.setScalar(0.88 + Math.sin(t * 3.2 + b.phase) * 0.12);
+        const pulse = 0.88 + Math.sin(t * 3.2 + b.phase) * 0.12;
+        b.mesh.scale.setScalar(pulse);
+        b.glow.material.opacity = 0.42 + Math.sin(t * 3.2 + b.phase) * 0.16;
       });
+
+      if (state.camShake > 0.0005) {
+        state.camShake *= Math.pow(0.015, dt);
+      } else {
+        state.camShake = 0;
+      }
+      const shakeX = state.camShake ? (Math.random() - 0.5) * state.camShake : 0;
+      const shakeY = state.camShake ? (Math.random() - 0.5) * state.camShake : 0;
 
       if (state.screen === 'home') {
         camera.position.x = camBase.x + Math.sin(t * 0.45) * 0.14;
@@ -3142,7 +3550,7 @@
         const targetCamX = player.posX * 0.78 + camBase.x;
         camera.position.x += (targetCamX - camera.position.x) * 0.12;
         camera.position.y += (camBase.y - camera.position.y) * 0.1;
-        camera.lookAt(player.posX * 0.45, 1.72, -2.92);
+        camera.lookAt(player.posX * 0.45 + shakeX, 1.72 + shakeY, -2.92);
       }
 
       renderer.render(scene, camera);
@@ -3150,7 +3558,7 @@
     }
 
     // =========================================================================
-    // 12. RESIZE, UI LISTENERS & SAFE STARTUP
+    // 12. RESIZE & UI EVENT LISTENERS
     // =========================================================================
     function onResize() {
       const w = container.clientWidth || window.innerWidth;
@@ -3179,31 +3587,72 @@
 
     document.getElementById('btn-start').addEventListener('click', () => {
       audio.init();
-      loadLevel(1);
+      audio.playUiTap();
+      loadLevel(state.unlockedLevel);
     });
 
     document.getElementById('btn-rules').addEventListener('click', () => {
       audio.init();
+      audio.playUiTap();
       modalRules.classList.add('open');
     });
 
     document.getElementById('btn-close-rules').addEventListener('click', () => {
+      audio.playUiTap();
       modalRules.classList.remove('open');
     });
 
     document.getElementById('btn-next-level').addEventListener('click', () => {
       audio.init();
+      audio.playUiTap();
       loadLevel(state.level + 1);
     });
 
     document.getElementById('btn-retry').addEventListener('click', () => {
       audio.init();
+      audio.playUiTap();
       loadLevel(state.level);
     });
 
+    document.getElementById('pause-btn').addEventListener('click', () => {
+      if (state.screen !== 'playing') return;
+      audio.init();
+      audio.playUiTap();
+      state.screen = 'paused';
+      player.moveDir = 0;
+      drag.active = false;
+      aimDots.forEach((d) => (d.visible = false));
+      powerMeter.classList.remove('visible');
+      document.getElementById('pause-title').textContent = `第 ${state.level} / ${TOTAL_LEVELS} 關`;
+      buildLevelGrid();
+      modalPause.classList.add('open');
+    });
+
+    document.getElementById('btn-resume').addEventListener('click', () => {
+      audio.playUiTap();
+      modalPause.classList.remove('open');
+      state.screen = 'playing';
+    });
+
+    document.getElementById('btn-pause-restart').addEventListener('click', () => {
+      audio.playUiTap();
+      loadLevel(state.level);
+    });
+
+    document.getElementById('btn-pause-home').addEventListener('click', () => {
+      audio.playUiTap();
+      returnHome();
+    });
+
     function returnHome() {
+      clearTimeout(state.resultTimer);
+      state.resultTimer = null;
       closeAllModals();
       clearFlyingBalls();
+      drag.active = false;
+      aimDots.forEach((d) => (d.visible = false));
+      powerMeter.classList.remove('visible');
+      streakBadge.classList.remove('show');
       state.screen = 'home';
       state.cfg = getLevelConfig(1);
       buildLevelHoops(state.cfg);
@@ -3213,6 +3662,7 @@
       moveControls.classList.remove('visible');
       player.moveDir = 0;
       swipeCue.classList.remove('visible');
+      updateStartButtonLabel();
       homeScreen.classList.remove('hidden');
     }
 
@@ -3221,9 +3671,11 @@
 
     document.getElementById('btn-replay').addEventListener('click', () => {
       audio.init();
+      audio.playUiTap();
       loadLevel(1);
     });
 
+    // Side-step movement controls (iPhone touch buttons + keyboard arrows/A-D)
     const btnMoveL = document.getElementById('btn-move-left');
     const btnMoveR = document.getElementById('btn-move-right');
 
@@ -3258,10 +3710,16 @@
       if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') && player.moveDir === 1) player.moveDir = 0;
     });
 
-    let started = false;
-    function bootGame() {
-      if (started) return;
-      started = true;
+    document.addEventListener('visibilitychange', () => {
+      if (!audio.ctx) return;
+      if (document.hidden) {
+        audio.ctx.suspend().catch(() => {});
+      } else if (!audio.muted) {
+        audio.ctx.resume().catch(() => {});
+      }
+    });
+
+    function startApp() {
       state.cfg = getLevelConfig(1);
       buildLevelHoops(state.cfg);
       onResize();
@@ -3270,9 +3728,9 @@
     }
 
     if (document.readyState === 'complete') {
-      bootGame();
+      startApp();
     } else {
-      window.addEventListener('load', bootGame);
+      window.addEventListener('load', startApp);
     }
   })();
   </script>
